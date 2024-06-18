@@ -1,0 +1,100 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    command: --mysql-native-password=ON --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    volumes:
+      - ./data/mysql/:/var/lib/mysql/
+      - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    ports:
+      - 23306:3306
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      MYSQL_ROOT_PASSWORD: "cool@123123321" # 配置root用户密码
+  redis:
+    image: redis
+    command: redis-server --requirepass "cool@123123321" # redis库密码,不需要密码注释本行
+    restart: always
+    ports:
+      - 26379:6379
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    volumes:
+      - ./data/redis/:/data/
+  chatgpt-share-server:
+    image: xyhelper/chatgpt-share-server:latest
+    restart: always
+    ports:
+      - 8300:8001
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      # 接入网关地址https://demo.xyhelper.cn
+      CHATPROXY: "https://ocean.xyhelper-agent.com"
+      # 接入网关的authkey
+      AUTHKEY: "xyhelper"
+      # 内容审核及速率限制
+      AUDIT_LIMIT_URL: "http://auditlimit:8080/audit_limit"
+      APIAUTH: "CJyb2xlSWRzIjpbIjEiXSwidXNlcm5hbWUiOiJhZG1pbiIsInVzZXJJZC"
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./data/chatgpt-share-server/:/app/data/
+      - ./resource/public/list.js:/app/resource/public/list.js
+    labels:
+      - "com.centurylinklabs.watchtower.scope=xyhelper-chatgpt-share-server"
+  auditlimit:
+    image: xyhelper/auditlimit
+    restart: always
+    # ports:
+    #   - 9611:8080
+    environment:
+      LIMIT: 40  # 限制每个userToken允许的次数
+      PER: "3h" # 限制周期 1s, 1m, 1h, 1d, 1w, 1y
+    labels:
+      - "com.centurylinklabs.watchtower.scope=xyhelper-chatgpt-share-server"
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --scope xyhelper-chatgpt-share-server --cleanup
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    labels:
+      - "com.centurylinklabs.watchtower.scope=xyhelper-chatgpt-share-server"
+  oceanpaasgpt:
+    image: registry.cn-zhangjiakou.aliyuncs.com/wt5512/oceanpaasgpt
+    restart: always
+    ports:
+      - 41010:80
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      ASPNETCORE_ENVIRONMENT: Production
+      TTID: "bc291beb-cac3-40e5-8e64-e1074cda97ad" # 用户TTID，请联系客服V：wtony123获取
+    volumes:
+      - ./oceanpaasgpt/logs/:/app/Log/
+      - ./oceanpaasgpt/appsettings.Production.json:/app/appsettings.Production.json
+  dujiaoka:
+    image: jiangjuhong/dujiaoka
+    restart: always   
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      WEB_DOCUMENT_ROOT: /app/public
+    volumes:
+      - ./dujiaoka/public:/app/public/
+      - ./dujiaoka/resources:/app/resources/
+      - ./dujiaoka/install.lock:/app/install.lock
+      - ./dujiaoka/env:/app/.env      
+  nginx:
+    image: nginx:1.23.1
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    volumes:
+      - ./nginx/www/:/usr/share/nginx/html/
+      - ./nginx/cert/:/etc/nginx/cert/
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
