@@ -54,7 +54,7 @@
 		    return; // Exit if 'userId' is not available
 		  }
 
-		  fetch('https://chat.'+TOP_LEVEL_DOMAIN+'/GptService/api/GptOrderInfo/AutoAuditGptOrderInfo', {
+		  fetch(URL_PROTOCOL+'://chat.'+TOP_LEVEL_DOMAIN+'/GptService/api/GptOrderInfo/AutoAuditGptOrderInfo', {
 		    method: 'POST',
 		    headers: {
 		      'Content-Type': 'application/json', // Set the content type header
@@ -94,7 +94,7 @@
                     $.NotificationApp.send("{{ __('hyper.qrpay_notice') }}","{{ __('hyper.payment_successful') }}","top-center","rgba(0,0,0,0.2)","success");
                     queryOrderStatus(()=>{
                         //setTimeout("window.location.href ='{{ url('detail-order-sn', ['orderSN' => $orderid]) }}'",3000);
-						const url = 'https://www.'+TOP_LEVEL_DOMAIN
+						const url = URL_PROTOCOL+'://www.'+TOP_LEVEL_DOMAIN
 						setTimeout(()=> window.location.href = url,3000);
                     })
                 }

@@ -201,7 +201,7 @@
 		return; // Exit if 'userId' is not available
 	  }
 
-	  fetch('https://chat.'+TOP_LEVEL_DOMAIN+'/GptService/api/GptOrderInfo/CheckTaobaoOrderId?taobaoOrderId='+taobaoOrderId, {
+	  fetch(URL_PROTOCOL+'://chat.'+TOP_LEVEL_DOMAIN+'/GptService/api/GptOrderInfo/CheckTaobaoOrderId?taobaoOrderId='+taobaoOrderId, {
 		method: 'GET'
 	  })
 	  .then(response => {
@@ -229,7 +229,7 @@
 	var userId=getCookie('userId')
     if(!userId){
         alert("请重新进入商品详情")
-        location.href='https://www.'+TOP_LEVEL_DOMAIN
+        location.href=URL_PROTOCOL+'://www.'+TOP_LEVEL_DOMAIN
     }
     $("input[name='email']").val(userId+"@domain.com");
 	$("input[name='email']").prop("readonly", true);

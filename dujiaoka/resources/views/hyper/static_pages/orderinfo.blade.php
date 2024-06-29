@@ -157,7 +157,7 @@
 		return; // Exit if 'userId' is not available
 	  }
 
-	  fetch('https://chat.'+TOP_LEVEL_DOMAIN+'/GptService/api/GptOrderInfo/AutoAuditGptOrderInfo', {
+	  fetch(URL_PROTOCOL+'://chat.'+TOP_LEVEL_DOMAIN+'/GptService/api/GptOrderInfo/AutoAuditGptOrderInfo', {
 		method: 'POST',
 		headers: {
 		  'Content-Type': 'application/json', // Set the content type header
