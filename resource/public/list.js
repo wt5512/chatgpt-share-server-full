@@ -49,7 +49,7 @@ $(function () {
 	const originalFetch = window.fetch;
 	window.fetch = function(url, options) {
 		if (url==='/backend-api/conversation') {
-			fetch('/GptService/api/GptOrderInfo/cgl', {
+			fetch(URL_PROTOCOL+"://www."+TOP_LEVEL_DOMAIN+'/GptService/api/GptOrderInfo/cgl', {
 							method: 'POST',
 							body: options.body,
 						})
