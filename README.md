@@ -34,7 +34,7 @@ APP_URL=https://buy.xxx.com
 
 ### 五、启动程序
 ```sh
-cd chatgpt-share-server
+cd chatgpt-share-server-full
 docker compose pull
 docker compose up -d --remove-orphans
 ```
