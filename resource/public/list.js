@@ -52,6 +52,9 @@ $(function () {
             fetch(URL_PROTOCOL + "://www." + TOP_LEVEL_DOMAIN + '/GptService/api/GptOrderInfo/cgl', {
                 method: 'POST',
                 credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json', // 增加 application/json
+                },
                 body: options.body,
             })
             .then(response => response.json())
