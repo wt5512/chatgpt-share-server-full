@@ -30,13 +30,16 @@ services:
     environment:
       TZ: Asia/Shanghai # 指定时区
       # 接入网关地址https://demo.xyhelper.cn
-      CHATPROXY: "https://ocean.xyhelper-agent.com"
+      # CHATPROXY: "https://ocean.xyhelper-agent.com"
+      # CHATPROXY: "https://ocean.xyhelper-gateway.com"
+      CHATPROXY: "https://proxy-10787.godai.ltd"
       # 接入网关的authkey
       AUTHKEY: "xyhelper"
       # 内容审核及速率限制
       AUDIT_LIMIT_URL: "http://auditlimit:8080/audit_limit"
       # 语音服务地址
       VOICESERVER: "https://voice.closeai.biz"
+      APIAUTH: "CJyb2xlSWRzIjpbIjEiXSwidXNlcm5hbWUiOiJhZG1pbiIsInVzZXJJZC"
     volumes:
       - ./config.yaml:/app/config.yaml
       - ./data/chatgpt-share-server/:/app/data/
@@ -67,14 +70,14 @@ services:
     image: registry.cn-zhangjiakou.aliyuncs.com/wt5512/oceanpaasgpt
     restart: always
     ports:
-      - 41010:80
+      - 41010:5005
     environment:
       TZ: Asia/Shanghai # 指定时区
       ASPNETCORE_ENVIRONMENT: Production
       TTID: "bc291beb-cac3-40e5-8e64-e1074cda97ad" # 用户TTID，请联系客服V：wtony123获取
     volumes:
       - ./oceanpaasgpt/logs/:/app/Log/
-      - ./oceanpaasgpt/appsettings.Production.json:/app/appsettings.Production.json
+      - ./oceanpaasgpt/Configuration.Production/:/app/Configuration.Production/
   dujiaoka:
     image: jiangjuhong/dujiaoka
     restart: always   
